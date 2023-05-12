@@ -24,10 +24,10 @@ final class NetworkService: NetworkServiceProtocol {
   
   //MARK: - Get add cards
 
-  func getAllCards(completion: @escaping (Result<AllCategories, Error>) -> Void) {
+  func getAllCards(offset: Int, completion: @escaping (Result<AllCategories, Error>) -> Void) {
 
     let parameters: [String: Any] = [
-      "offset": 0
+      "offset": offset
     ]
 
     self.createRequest(with: URL(string: APIBaseURL.getAllCompanies), type: .POST, parameters: parameters) { request in
@@ -85,7 +85,6 @@ extension NetworkService {
     request.httpBody = try? JSONSerialization.data(withJSONObject: parameters)
     request.setValue("123", forHTTPHeaderField: "TOKEN")
     request.httpMethod = type.rawValue
-    request.timeoutInterval = 30
     completion(request)
   }
 }

@@ -23,9 +23,8 @@
 		D9B5FEE02A0BE38A00FA3299 /* NetworkServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B5FEDF2A0BE38A00FA3299 /* NetworkServiceProtocol.swift */; };
 		D9B5FEE22A0BE4D900FA3299 /* VCViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B5FEE12A0BE4D900FA3299 /* VCViewModelProtocol.swift */; };
 		D9B5FEE42A0BE74800FA3299 /* CardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B5FEE32A0BE74800FA3299 /* CardCollectionViewCell.swift */; };
-		D9B5FEE62A0BE83600FA3299 /* CardTableViewCellVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B5FEE52A0BE83600FA3299 /* CardTableViewCellVM.swift */; };
-		D9B5FEE82A0BE84D00FA3299 /* CardCollectionViewCellVMProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B5FEE72A0BE84D00FA3299 /* CardCollectionViewCellVMProtocol.swift */; };
 		D9C722AF2A0D523800529C1E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C722AE2A0D523800529C1E /* Constants.swift */; };
+		D9C875E32A0D8397003EBC21 /* LoadingReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9C875E22A0D8397003EBC21 /* LoadingReusableView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,9 +48,8 @@
 		D9B5FEDF2A0BE38A00FA3299 /* NetworkServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkServiceProtocol.swift; sourceTree = "<group>"; };
 		D9B5FEE12A0BE4D900FA3299 /* VCViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCViewModelProtocol.swift; sourceTree = "<group>"; };
 		D9B5FEE32A0BE74800FA3299 /* CardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionViewCell.swift; sourceTree = "<group>"; };
-		D9B5FEE52A0BE83600FA3299 /* CardTableViewCellVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardTableViewCellVM.swift; sourceTree = "<group>"; };
-		D9B5FEE72A0BE84D00FA3299 /* CardCollectionViewCellVMProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionViewCellVMProtocol.swift; sourceTree = "<group>"; };
 		D9C722AE2A0D523800529C1E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		D9C875E22A0D8397003EBC21 /* LoadingReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingReusableView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +172,7 @@
 			isa = PBXGroup;
 			children = (
 				D9A316DA2A0B9F5F009EEAFD /* ViewController.swift */,
+				D9C875E22A0D8397003EBC21 /* LoadingReusableView.swift */,
 				D9B5FEE92A0BE86000FA3299 /* Cells */,
 				D9B5FEDD2A0BE31D00FA3299 /* VCViewModel.swift */,
 				D9B5FEE12A0BE4D900FA3299 /* VCViewModelProtocol.swift */,
@@ -193,8 +192,6 @@
 			isa = PBXGroup;
 			children = (
 				D9B5FEE32A0BE74800FA3299 /* CardCollectionViewCell.swift */,
-				D9B5FEE52A0BE83600FA3299 /* CardTableViewCellVM.swift */,
-				D9B5FEE72A0BE84D00FA3299 /* CardCollectionViewCellVMProtocol.swift */,
 			);
 			path = CardCollectionViewCell;
 			sourceTree = "<group>";
@@ -322,7 +319,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D9A316F62A0BC903009EEAFD /* UIColor+Hex.swift in Sources */,
-				D9B5FEE62A0BE83600FA3299 /* CardTableViewCellVM.swift in Sources */,
 				D9A316DB2A0B9F5F009EEAFD /* ViewController.swift in Sources */,
 				D9B5FEDE2A0BE31D00FA3299 /* VCViewModel.swift in Sources */,
 				D9B5FEE22A0BE4D900FA3299 /* VCViewModelProtocol.swift in Sources */,
@@ -331,11 +327,11 @@
 				D9C722AF2A0D523800529C1E /* Constants.swift in Sources */,
 				D9A316D72A0B9F5F009EEAFD /* AppDelegate.swift in Sources */,
 				D9B5FEE42A0BE74800FA3299 /* CardCollectionViewCell.swift in Sources */,
+				D9C875E32A0D8397003EBC21 /* LoadingReusableView.swift in Sources */,
 				D9A316FB2A0BCCB6009EEAFD /* AllCategoriesModel.swift in Sources */,
 				D9A316EC2A0BC6A1009EEAFD /* NetworkService.swift in Sources */,
 				D910CFC52A0C1D9D00FAFA28 /* UIView+Rounded.swift in Sources */,
 				D9A316EF2A0BC6FE009EEAFD /* EndPointType.swift in Sources */,
-				D9B5FEE82A0BE84D00FA3299 /* CardCollectionViewCellVMProtocol.swift in Sources */,
 				D9A316D92A0B9F5F009EEAFD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,5 +8,5 @@
 import Foundation
 
 protocol NetworkServiceProtocol {
-  func getAllCards(completion: @escaping (Result<AllCategories, Error>) -> Void)
+  func getAllCards(offset: Int, completion: @escaping (Result<AllCategories, Error>) -> Void)
 }

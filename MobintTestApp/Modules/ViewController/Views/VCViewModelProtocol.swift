@@ -9,5 +9,7 @@ import Foundation
 
 protocol VCViewModelProtocol {
   var model: AllCategories { get }
-  func fetchAllCategoryData(completion: @escaping (() -> Void)) 
+  func fetchAllCategoryData(offset: Int, completion: @escaping (() -> Void))
+  func fetchMoreCategoryData(offset: Int, completion: @escaping ((Bool, Bool) -> Void))
+  var errorHandler: ((String) -> Void)? { get set }
 }

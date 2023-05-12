@@ -7,11 +7,11 @@
 
 import UIKit
 
-final class ViewController: UIViewController {
+final class ViewController: UIViewController, UICollectionViewDelegateFlowLayout {
 
   //MARK: - Properties
 
-  private let viewModel: VCViewModelProtocol
+  private var viewModel: VCViewModelProtocol
   private var collectionView: UICollectionView!
   private let bankCardManagement: UIButton = {
     let button = UIButton()
@@ -21,6 +21,17 @@ final class ViewController: UIViewController {
     button.setTitleColor(Colors.bankManagmentColor, for: .normal)
     return button
   }()
+  private lazy var refreshControl: UIRefreshControl = {
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
+    refreshControl.attributedTitle = NSAttributedString(string: "Подгрузка компаний")
+    return refreshControl
+  }()
+
+  private var loadingView: LoadingReusableView?
+
+  var offset = 0
+  private var isLoading = false
 
   //MARK: - Init
 
@@ -40,13 +51,14 @@ final class ViewController: UIViewController {
     self.view.backgroundColor = Colors.collectionViewBackground
     setupCollectionView()
     setConstraints()
+    displayError()
     bind()
   }
 
   //MARK: - Binding
 
   func bind() {
-    viewModel.fetchAllCategoryData {
+    viewModel.fetchAllCategoryData(offset: offset) {
       DispatchQueue.main.async {
         self.collectionView.reloadData()
       }
@@ -70,15 +82,48 @@ final class ViewController: UIViewController {
     collectionView.showsVerticalScrollIndicator = false
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     collectionView.register(CardCollectionViewCell.self, forCellWithReuseIdentifier: String(describing: CardCollectionViewCell.self))
+    collectionView.register(LoadingReusableView.self,
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: "\(LoadingReusableView.self)")
     view.addSubview(collectionView)
-
+    collectionView.refreshControl = refreshControl
   }
-
 }
+
+extension ViewController {
+  @objc private func refresh(_ sender: UIRefreshControl) {
+    viewModel.fetchAllCategoryData(offset: 0) {
+      self.offset = 0
+      DispatchQueue.main.async {
+        sender.endRefreshing()
+        self.collectionView.reloadData()
+      }
+    }
+  }
+}
+
+extension ViewController {
+  func displayError() {
+    viewModel.errorHandler = { [weak self] errorMessage in
+      self?.handleAPIError(errorMessage)
+    }
+  }
+}
+
+extension ViewController {
+  func handleAPIError(_ errorMessage: String) {
+    DispatchQueue.main.async {
+      let alert = UIAlertController(title: "Ошибка", message: errorMessage, preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "Окей", style: .default, handler: nil))
+
+      self.present(alert, animated: true, completion: nil)
+    }
+  }
+}
+
 
 //MARK: - UICollectionViewDataSource
 
-extension ViewController: UICollectionViewDataSource {
+extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return viewModel.model.count
   }
@@ -92,13 +137,72 @@ extension ViewController: UICollectionViewDataSource {
     cell.configure(model: cellInfo)
     return cell
   }
-}
 
-//MARK: - UICollectionViewDelegate
+  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+    if self.isLoading {
+      return CGSize.zero
+    } else {
+      return CGSize(width: collectionView.bounds.size.width, height: 55)
+    }
+  }
 
-extension ViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    if kind == UICollectionView.elementKindSectionFooter {
+      guard let aFooterView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "\(LoadingReusableView.self)", for: indexPath) as? LoadingReusableView else { return UICollectionReusableView() }
+      loadingView = aFooterView
+      loadingView?.backgroundColor = .clear
+      return aFooterView
+    }
+    return UICollectionReusableView()
+  }
+
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     collectionView.deselectItem(at: indexPath, animated: true)
+  }
+
+  func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+    if elementKind == UICollectionView.elementKindSectionFooter {
+      self.loadingView?.activityIndicator.startAnimating()
+    }
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didEndDisplayingSupplementaryView view: UICollectionReusableView, forElementOfKind elementKind: String, at indexPath: IndexPath) {
+    if elementKind == UICollectionView.elementKindSectionFooter {
+      self.loadingView?.activityIndicator.stopAnimating()
+    }
+  }
+
+  func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    print("index", indexPath.row)
+    print("vm", viewModel.model.count - 1)
+    if indexPath.row == viewModel.model.count - 1 && !self.isLoading {
+      loadMoreData()
+    }
+  }
+
+  func loadMoreData() {
+    if !self.isLoading {
+
+      self.isLoading = true
+      self.offset += 1
+
+      viewModel.fetchMoreCategoryData(offset: offset) { success, isEmpty in
+        DispatchQueue.main.async {
+          self.isLoading = false
+          self.loadingView?.activityIndicator.stopAnimating()
+
+          if success {
+            if isEmpty {
+              self.loadingView?.isHidden = true
+            } else {
+              self.collectionView.reloadData()
+            }
+          } else {
+            // Обработка ошибки
+          }
+        }
+      }
+    }
   }
 }
 
@@ -150,9 +254,6 @@ extension ViewController {
       collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
     ])
-
-
-
   }
 }
 
